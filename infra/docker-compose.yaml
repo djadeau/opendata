@@ -57,11 +57,12 @@ services:
       context: .
     ports:
         - "9192:9092"
+        - "9193:9093"
     networks:
-      - default
-      - external
-      #kafka-net:
-      #  ipv4_address: 172.18.0.11
+      #- default
+      #- external
+      kafka-net:
+        ipv4_address: "172.18.0.11"
     volumes:
     - ./config/kafka1/server.properties:/kafka/config/server.properties
     - ./data/kafka1/:/data/kafka/
@@ -72,11 +73,11 @@ services:
       context: .
     ports:
         - "9292:9092"
+        - "9293:9093"
     networks:
-      - default
-      - external
-      #kafka-net:
-      #  ipv4_address: 172.18.0.12
+      #- default
+      kafka-net:
+        ipv4_address: "172.18.0.12"
     volumes:
     - ./config/kafka2/server.properties:/kafka/config/server.properties
     - ./data/kafka2/:/data/kafka/
@@ -87,11 +88,11 @@ services:
       context: .
     ports:
         - "9392:9092"
+        - "9393:9093"
     networks:
-      - default
-      - external
-      #kafka-net:
-      #  ipv4_address: 172.18.0.13
+      #- default
+      kafka-net: 
+        ipv4_address: "172.18.0.13"
     volumes:
     - ./config/kafka3/server.properties:/kafka/config/server.properties
     - ./data/kafka3/:/data/kafka/
@@ -109,6 +110,9 @@ services:
       interval: 5s
       retries: 5
     restart: always
+    networks:
+      - default
+      - external
 
   redis:
     image: redis:latest
@@ -120,6 +124,10 @@ services:
       timeout: 30s
       retries: 50
     restart: always
+    networks:
+      - default
+      - external
+
 
   airflow-webserver:
     <<: *airflow-common
@@ -132,6 +140,9 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - default
+      - external
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -146,6 +157,9 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - default
+      - external
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -167,6 +181,9 @@ services:
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
     restart: always
+    networks:
+      - default
+      - external
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -181,6 +198,9 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - default
+      - external
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
@@ -261,6 +281,9 @@ services:
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
       _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:0"
+    networks:
+      - default
+      - external
     volumes:
       - .:/sources
 
@@ -276,6 +299,10 @@ services:
       - bash
       - -c
       - airflow
+    networks:
+      - default
+      - external
+
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
@@ -293,6 +320,9 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - default
+      - external
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
